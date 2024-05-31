@@ -1,14 +1,7 @@
-#----------------------------------------------------------------------------------------------------
-# Author: creativeJoe007
-# Website: https://creativejoe007.com
-#----------------------------------------------------------------------------------------------------
-# A Google bot that allows anyone to search for businesses using a keyword
-# We extract the website title, description, email (if any), mobile number (if any), web-link
-# An ideal bot for marketers looking to find leads/prospects
-#----------------------------------------------------------------------------------------------------
 import argparse
 import os
 import time
+from datetime import datetime
 from browser import determine_browser
 from extractor import Extractor
 from println import println
@@ -18,7 +11,7 @@ arguments = argparse.ArgumentParser()
 
 arguments.add_argument('--start', action='store', type=int, required=False, default=0, help="What page would you like us to start scrape from Google's search result")
 arguments.add_argument('--stop', action='store', type=int, required=False, default=14, help="At what page would you want to stop scraping Google's search result")
-arguments.add_argument('--file', action='store', type=str, required=True, help="File name to save extracted data")
+arguments.add_argument('--file', action='store', type=str, required=False, help="File name to save extracted data")
 arguments.add_argument('--browser', action='store', type=str, required=False, default="chrome", help="What browser should we scrape with?")
 arguments.add_argument('--driver', action='store', type=str, required=False, help="Browser executable path")
 
@@ -30,7 +23,8 @@ def main():
     selected_browser = args.browser
     browser_driver_path = args.driver
     query = os.getenv('QUERY')  # Read from environment variable
-    file_name = args.file
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    file_name = args.file or f"data_{timestamp}.txt"
     start_page = args.start - 1
     stop_page = args.stop - 1
 
