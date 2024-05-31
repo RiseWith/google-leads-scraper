@@ -3,3 +3,4 @@ webdriver_manager==3.7.1
 selenium
 argparse
 flask
+gunicorn
