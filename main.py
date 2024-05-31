@@ -7,6 +7,8 @@
 # An ideal bot for marketers looking to find leads/prospects
 #----------------------------------------------------------------------------------------------------
 import argparse
+import os
+import time
 from browser import determine_browser
 from extractor import Extractor
 from println import println
@@ -14,7 +16,6 @@ from println import println
 driver = None
 arguments = argparse.ArgumentParser()
 
-arguments.add_argument('query', action='store', type=str, help="This is your google query and should be written as a string")
 arguments.add_argument('--start', action='store', type=int, required=False, default=0, help="What page would you like us to start scrape from Google's search result")
 arguments.add_argument('--stop', action='store', type=int, required=False, default=14, help="At what page would you want to stop scraping Google's search result")
 arguments.add_argument('--file', action='store', type=str, required=True, help="File name to save extracted data")
@@ -28,10 +29,16 @@ def main():
     session_id = ""
     selected_browser = args.browser
     browser_driver_path = args.driver
-    query = args.query
+    query = os.getenv('QUERY')  # Read from environment variable
     file_name = args.file
     start_page = args.start - 1
     stop_page = args.stop - 1
+
+    # Wait until QUERY environment variable is set
+    while not query:
+        println("Waiting for query to be provided...", "normal")
+        time.sleep(5)
+        query = os.getenv('QUERY')
 
     if start_page < 0:
         start_page = 0  # If the user puts in 0, we auto make it one
